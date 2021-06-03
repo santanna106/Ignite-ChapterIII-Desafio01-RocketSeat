@@ -58,32 +58,37 @@ interface HomeProps {
   const response = await prismic.query([
       Prismic.predicates.at('document.type','post')
   ], {
-      fetch: ['post.title','post.subtitle','post.author','post.content'],
+      fetch: ['post.title','post.subtitle','post.author'],
       pageSize:100,
   })
 
 
-  const posts = {
-    next_page: response.next_page,
-    results:response.results.map(post => {
-      return {
-        slug:post.uid,
-        first_publication_date:post.first_publication_date,
-        data: {
-          title:post.data.title,
-          subtitle:post.data.subtitle,
-          author:post.data.author
-        }
-        
-      }
-    })
+  const postsPagination = {
+   
 
-  } 
+    
+        next_page: response.next_page,
+        results:response.results.map(post => {
+          return {
+            slug:post.uid,
+            first_publication_date:post.first_publication_date,
+            data: {
+              title:post.data.title,
+              subtitle:post.data.subtitle,
+              author:post.data.author
+            }
+            
+          }
+        })
+    }
 
- 
+
+  
+
+  console.log('POSTS: ',JSON.stringify(postsPagination,null,2));
 
   return {
-      props : {posts}
+      props : {postsPagination}
 
   }
 }
