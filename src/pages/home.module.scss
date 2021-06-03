@@ -1,1 +1,11 @@
 // TODO
+.container {
+    width: 100%;
+    height: calc(100vh - 5rem); // Calculando 
+    background-color:var(--black-900);
+}
+
+.posts{
+    background-color:var(--black-900);
+    color: var(--white-300);
+}
