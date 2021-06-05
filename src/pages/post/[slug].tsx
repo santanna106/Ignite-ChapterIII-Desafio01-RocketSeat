@@ -57,13 +57,16 @@ export default function Post({post} : PostProps) {
     setMinutos(minutos);
   },[post])
 
+   if  (router.isFallback) {
+     return <div><h1>Carregando...</h1></div>
+   }
 
    // TODO
    return (
 
      router.isFallback
      ?
-     <div>Carregando...</div>
+     <div><h1>Carregando...</h1></div>
      :
      <div className={styles.container}>
 
@@ -115,7 +118,9 @@ export default function Post({post} : PostProps) {
                   }
 
          </main>
+
         </>
+        <div><h1>Carregando...</h1></div>
      </div>
                 )
 }
@@ -125,8 +130,6 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 
   const prismic = getPrismicClient();
   const posts = await prismic.query([ Prismic.predicates.at('document.type','post')]);
-
-  console.log('posts: ',posts.results);
 
   let slugsObj = [];
   posts.results.forEach((elemento) => {
