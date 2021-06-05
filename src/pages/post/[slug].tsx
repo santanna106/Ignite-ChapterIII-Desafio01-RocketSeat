@@ -1,9 +1,10 @@
+import {useState,useEffect} from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router'
 import { FiCalendar,FiUser,FiClock } from "react-icons/fi";
 
-import { RichText, } from 'prismic-dom';
+import Prismic from '@prismicio/client';
 
 
 
@@ -38,13 +39,32 @@ interface PostProps {
 }
 
 export default function Post({post} : PostProps) {
+  const [minutos,setMinutos] = useState(0);
   const router = useRouter()
 
-  if (router.isFallback) {
-    return <div>Carregando...</div>
-  }
+  useEffect(() => {
+    let linhas = [];
+    post.data.content.forEach(conteudo => {
+        linhas = [...linhas,conteudo.heading];
+        conteudo.body.forEach(paragrafos => {
+          linhas = [...linhas,paragrafos.text];
+        })
+      }
+    )
+    let minutos = Math.ceil( linhas.reduce(function (acumulador, valorAtual) {
+      return acumulador + valorAtual.split(/\s/).length;
+    }, 0)/200);
+    setMinutos(minutos);
+  },[post])
+
+
    // TODO
    return (
+
+     router.isFallback
+     ?
+     <div>Carregando...</div>
+     :
      <div className={styles.container}>
 
        <img src={post.data.banner.url} alt="carregar" />
@@ -52,6 +72,7 @@ export default function Post({post} : PostProps) {
           <Head>
               <title> {post.data.title}</title>
          </Head>
+
          <main key={post.data.title} className={styles.container}>
 
                  <h1>{post.data.title}</h1>
@@ -74,7 +95,7 @@ export default function Post({post} : PostProps) {
                       </div>
                       <div className={styles.author}>
                          <FiClock />
-                         <span>{post.data.author}</span>
+                         <span>{minutos} min</span>
                       </div>
 
 
@@ -96,22 +117,35 @@ export default function Post({post} : PostProps) {
          </main>
         </>
      </div>
-   )
+                )
 }
 
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 
   const prismic = getPrismicClient();
-//   const posts = await prismic.query(TODO);
+  const posts = await prismic.query([ Prismic.predicates.at('document.type','post')]);
+
+  console.log('posts: ',posts.results);
+
+  let slugsObj = [];
+  posts.results.forEach((elemento) => {
+    let obj = {
+      params: {
+        slug:elemento.uid
+      }
+    }
+
+    slugsObj = [...slugsObj,obj]
+  })
 
   return {
-      paths: [], //indicates that no page needs be created at build time
+      paths: slugsObj,
       fallback: true,
   }
 }
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps:GetStaticProps = async ({ params }) => {
   const { slug } = params
 
   const prismic = getPrismicClient();
@@ -131,39 +165,6 @@ export const getStaticProps = async ({ params }) => {
     }
   }
 
-  let corpo = response.data.content.map(conteudo => {
-      console.log('conteudo.body: ',conteudo.body);
-      return conteudo.body
-    }
-  )
-
-  let textos = corpo.map(tex => {
-    return tex;
-  })
-
-  let linhas = [];
-  let paragrafos = textos.map(tex => {
-    console.log('tex.text: ',tex)
-    return tex;
-  })
-
-  let frases = paragrafos.map(tex => {
-
-  tex.forEach(element => {
-       linhas = [...linhas, element.text];
-    });
-    return linhas;
-  })
-
-
-
-  let minutos = linhas.reduce(function (acumulador, valorAtual) {
-    console.log('SPLIT> ',valorAtual.split(/\s/))
-    return acumulador + valorAtual.split(/\s/).length;
-  }, 0)/200;
-
-  console.log('TEXTOS : ',JSON.stringify(  linhas,null,2))
-  console.log('MINUTOS : ',JSON.stringify(  minutos,null,2))
 
 
   return { props:{

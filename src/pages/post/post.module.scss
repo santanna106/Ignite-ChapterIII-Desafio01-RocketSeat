@@ -7,16 +7,16 @@
     }
 
     .dataAuthor {
-        
+
         display:flex;
         flex-direction: row;
         margin-top: 2rem;
     }
 
     .date{
-       
+
         time {
-            
+
             margin-left: 0.2rem;
         }
     }
@@ -24,7 +24,7 @@
     .author {
         margin-left: 1rem;
         span {
-            text-transform: capitalize;
+
             margin-left: 0.2rem;
         }
     }
