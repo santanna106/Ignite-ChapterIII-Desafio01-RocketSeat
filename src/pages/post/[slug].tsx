@@ -1,9 +1,10 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router'
-import { FiCalendar,FiUser } from "react-icons/fi";
+import { FiCalendar,FiUser,FiClock } from "react-icons/fi";
 
-import { RichText } from 'prismic-dom';
+import { RichText, } from 'prismic-dom';
+
 
 
 import { format } from 'date-fns';
@@ -57,12 +58,26 @@ export default function Post({post} : PostProps) {
                  <div className={styles.dataAuthor}>
                             <div className={styles.date}>
                               <FiCalendar />
-                              <time>{post.first_publication_date}</time>
+                              <time>{format(
+	                                          new Date(post.first_publication_date),
+	                                              "dd MMM yyyy",
+	                                              {
+		                                              locale: ptBR,
+	                                              }
+                                            )
+                                     }
+                               </time>
                             </div>
                       <div className={styles.author}>
                          <FiUser />
                          <span>{post.data.author}</span>
                       </div>
+                      <div className={styles.author}>
+                         <FiClock />
+                         <span>{post.data.author}</span>
+                      </div>
+
+
 
                   </div>
                   {
@@ -115,6 +130,41 @@ export const getStaticProps = async ({ params }) => {
       content:response.data.content,
     }
   }
+
+  let corpo = response.data.content.map(conteudo => {
+      console.log('conteudo.body: ',conteudo.body);
+      return conteudo.body
+    }
+  )
+
+  let textos = corpo.map(tex => {
+    return tex;
+  })
+
+  let linhas = [];
+  let paragrafos = textos.map(tex => {
+    console.log('tex.text: ',tex)
+    return tex;
+  })
+
+  let frases = paragrafos.map(tex => {
+
+  tex.forEach(element => {
+       linhas = [...linhas, element.text];
+    });
+    return linhas;
+  })
+
+
+
+  let minutos = linhas.reduce(function (acumulador, valorAtual) {
+    console.log('SPLIT> ',valorAtual.split(/\s/))
+    return acumulador + valorAtual.split(/\s/).length;
+  }, 0)/200;
+
+  console.log('TEXTOS : ',JSON.stringify(  linhas,null,2))
+  console.log('MINUTOS : ',JSON.stringify(  minutos,null,2))
+
 
   return { props:{
               post
