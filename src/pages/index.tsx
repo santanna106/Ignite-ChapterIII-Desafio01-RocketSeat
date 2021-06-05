@@ -37,11 +37,7 @@ interface HomeProps {
    const [posts, setPosts] = useState<Post[]>([]);
 
    useEffect(()=> {
-    console.log('posts: ',posts);
-   },[postPaginacao])
 
-   useEffect(()=> {
-        
         postsPagination.results.map(post => {
           let resultPost = {
               uid:post.uid,
@@ -57,18 +53,18 @@ interface HomeProps {
                 subtitle:post.data.subtitle,
                 author:post.data.author
               }
-              
+
             }
-            console.log('resultPost: ',resultPost)
+
             setPosts(old => [...old, resultPost])
             return resultPost
       })
-    
+
    },[])
-   
+
    function proximaPagina(){
 
-    
+
       fetch(postPaginacao.next_page)
       .then(response => response.json())
       .then(data =>  {
@@ -77,26 +73,21 @@ interface HomeProps {
                 results:data.results.map(post => {
                   let resultPost = {
                     uid:post.uid,
-                    first_publication_date: format(
-                      new Date(post.first_publication_date),
-                      "dd MMM yyyy",
-                      {
-                        locale: ptBR,
-                      }
-                    ) ,
+                    first_publication_date: post.first_publication_date,
+
                     data: {
                       title:post.data.title,
                       subtitle:post.data.subtitle,
                       author:post.data.author
                     }
-                    
+
                   }
                   setPosts([...posts, resultPost])
                   return resultPost
           })
       })
-        
-        
+
+
     });
 
 
@@ -112,7 +103,7 @@ interface HomeProps {
                         <a>
                           <h1 className={commonStyles.title}>{post.data.title}</h1>
                           <h3 className={styles.subtitle}>{post.data.subtitle}</h3>
-                         
+
                           <div className={styles.dataAuthor}>
                             <div className={styles.date}>
                               <FiCalendar />
@@ -128,16 +119,16 @@ interface HomeProps {
                               <FiUser />
                               <span>{post.data.author}</span>
                             </div>
-                            
+
                           </div>
-                          
+
                          </a>
                     </Link>
                  ))}
 
-             
+
               {
-                postPaginacao?.next_page && 
+                postPaginacao?.next_page &&
                 <div className={styles.btnCarregar}>
                   <button type="button" onClick={()=> proximaPagina()}>
                         Carregar mais posts
@@ -146,10 +137,10 @@ interface HomeProps {
               }
             </div>
         </main>
-       
+
        </div>
 
-   
+
     )
  }
 
@@ -163,26 +154,20 @@ interface HomeProps {
       pageSize:2,
     })
 
- 
+
 
   const postsPagination = {
         next_page: response.next_page,
         results:response.results.map(post => {
           return {
             uid:post.uid,
-            first_publication_date: format(
-              new Date(post.first_publication_date),
-              "dd MMM yyyy",
-              {
-                locale: ptBR,
-              }
-            ) ,
+            first_publication_date: post.first_publication_date,
             data: {
               title:post.data.title,
               subtitle:post.data.subtitle,
               author:post.data.author
             }
-            
+
           }
         })
     }

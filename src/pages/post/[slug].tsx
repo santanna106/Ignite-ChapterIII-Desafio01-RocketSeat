@@ -15,6 +15,7 @@ import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
 
 interface Post {
+  uid:string;
   first_publication_date: string | null;
   data: {
     title: string;
@@ -38,21 +39,20 @@ interface PostProps {
 export default function Post({post} : PostProps) {
   const router = useRouter()
 
-  console.log('POST: ',post);
   if (router.isFallback) {
     return <div>Carregando...</div>
   }
    // TODO
    return (
      <div className={styles.container}>
-     
+
        <img src={post.data.banner.url} alt="carregar" />
        <>
           <Head>
               <title> {post.data.title}</title>
          </Head>
-         <main className={styles.container}>
-             <article>
+         <main key={post.data.title} className={styles.container}>
+
                  <h1>{post.data.title}</h1>
                  <div className={styles.dataAuthor}>
                             <div className={styles.date}>
@@ -63,21 +63,21 @@ export default function Post({post} : PostProps) {
                          <FiUser />
                          <span>{post.data.author}</span>
                       </div>
-                            
+
                   </div>
                   {
-                    post.data.content.map(conteudo => (
-                      <>
-                        <h1>{conteudo.heading}</h1>
+                    post.data.content.map((conteudo,index) => (
+                      <div key={conteudo.heading}>
+                        <h1 >{conteudo.heading}</h1>
                         {
-                          conteudo.body.map(corpo => (
-                            <div>{corpo.text}</div>
+                          conteudo.body.map((corpo,index) => (
+                            <div key={index}>{corpo.text}</div>
                           ))
                         }
-                      </>
+                      </div>
                     ))
                   }
-             </article>
+
          </main>
         </>
      </div>
@@ -102,30 +102,23 @@ export const getStaticProps = async ({ params }) => {
   const prismic = getPrismicClient();
   const response = await prismic.getByUID('post',String(slug),{});
 
-  console.log('response: ',JSON.stringify(response,null,2))
-
-  
-  const post = { 
-    first_publication_date: format(
-      new Date(response.first_publication_date),
-      "dd MMM yyyy",
-      {
-        locale: ptBR,
-      }
-    ) ,
+  const post = {
+    uid:response.uid,
+    first_publication_date: response.first_publication_date,
     data : {
       title: response.data.title,
+      subtitle:response.data.subtitle,
       banner: {
         url: response.data.banner.url,
       },
       author:response.data.author,
       content:response.data.content,
-    }   
+    }
   }
- 
+
   return { props:{
-              post 
+              post
         }
       }
-  
+
 }
