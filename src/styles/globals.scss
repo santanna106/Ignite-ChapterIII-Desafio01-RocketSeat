@@ -5,6 +5,7 @@
 }
 
 :root {
+  --white:#FFFFFF;
   --white-300:#F8F8F8;
   --gray-400:#BBBBBB;
   --pink-500:#FF57B2;
@@ -15,3 +16,9 @@ button{
   cursor:pointer;
 }
 
+h1 {
+  font-size: 2.5rem;
+  line-height: 2.5rem;
+  font-weight: 900;
+  margin-top: 2.5rem;
+}
