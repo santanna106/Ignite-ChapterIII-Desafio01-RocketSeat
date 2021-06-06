@@ -130,7 +130,7 @@ interface HomeProps {
               {
                 postPaginacao?.next_page &&
                 <div className={styles.btnCarregar}>
-                  <button type="button" onClick={()=> proximaPagina()}>
+                  <button className={styles.botaoCarregar} type="button" onClick={()=> proximaPagina()}>
                         Carregar mais posts
                   </button>
                 </div>

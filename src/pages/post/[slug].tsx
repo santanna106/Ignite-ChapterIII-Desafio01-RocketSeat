@@ -71,14 +71,15 @@ export default function Post({post} : PostProps) {
      <div className={styles.container}>
 
        <img src={post.data.banner.url} alt="carregar" />
-       <>
+
           <Head>
               <title> {post.data.title}</title>
          </Head>
 
-         <main key={post.data.title} className={styles.container}>
+         <h1 className={styles.title}>{post.data.title}</h1>
 
-                 <h1>{post.data.title}</h1>
+         <main key={post.data.title} className={styles.containerMain}>
+
                  <div className={styles.dataAuthor}>
                             <div className={styles.date}>
                               <FiCalendar />
@@ -106,21 +107,22 @@ export default function Post({post} : PostProps) {
                   </div>
                   {
                     post.data.content.map((conteudo,index) => (
-                      <div key={conteudo.heading}>
-                        <h1 >{conteudo.heading}</h1>
+                      <article className={styles.article} key={conteudo.heading}>
+                        <h1 className={styles.subtitle}>{conteudo.heading}</h1>
                         {
                           conteudo.body.map((corpo,index) => (
-                            <div key={index}>{corpo.text}</div>
+                            <div className={styles.corpo} key={index}>{corpo.text}</div>
                           ))
                         }
-                      </div>
+                      </article>
                     ))
                   }
 
+            <div><h1 className={styles.loading}>Carregando...</h1></div>
          </main>
 
-        </>
-        <div><h1>Carregando...</h1></div>
+
+
      </div>
                 )
 }

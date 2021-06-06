@@ -1,16 +1,43 @@
 .container {
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+
     background-color: var(--black-900);
 
+    width: 100%;
+
+
+    .containerMain {
+      margin-top: 3.1rem;
+      display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+      background-color: var(--black-900);
+      height: 100vh;
+      width: 700px;
+    }
     img {
         width: 1400px;
         height: 400px;
     }
 
-    .dataAuthor {
+    .article{
+      width: 700px;
+    }
 
+    .dataAuthor {
+        margin-top: 2.5rem;
+        color:var(--gray-400);
+        font-size: 1rem;
         display:flex;
+
         flex-direction: row;
-        margin-top: 2rem;
+
+
     }
 
     .date{
@@ -27,6 +54,27 @@
 
             margin-left: 0.2rem;
         }
+    }
+
+    .title {
+      color: var(--white);
+      font-size: 4rem;
+    }
+
+    .subtitle {
+      color: var(--white);
+      font-size: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .corpo {
+
+      color: var(--white);
+      font-size: 1.2rem;
+    }
+
+    .loading{
+      color: var(--black-900);
     }
 
 }
